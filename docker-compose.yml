@@ -1,4 +1,4 @@
-version: "3"
+version: "3.4"
 
 services:
   q-rabbitmq:
@@ -14,7 +14,7 @@ services:
     env_file:
       - rabbitmq/q-rabbitmq-auth.env
     # Do some health checks to see if q-rabbitmq is running before starting the other services
-    healthcheck: 
+    healthcheck:
       test: rabbitmq-diagnostics -q status
       interval: 15s
       timeout: 15s
@@ -31,8 +31,7 @@ services:
     env_file:
       - services/contact/.env
     depends_on:
-      q-rabbitmq:
-        condition: service_healthy
+      - q-rabbitmq
 
   order-service:
     container_name: order-service
@@ -45,8 +44,7 @@ services:
     env_file:
       - services/order/.env
     depends_on:
-      q-rabbitmq:
-        condition: service_healthy
+      - q-rabbitmq
 
   shipping-service:
     container_name: shipping-service
@@ -59,8 +57,7 @@ services:
     env_file:
       - services/shipping/.env
     depends_on:
-      q-rabbitmq:
-        condition: service_healthy
+      - q-rabbitmq
 
 networks:
   q-rabbitmq-network:
